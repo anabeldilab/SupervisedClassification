@@ -16,11 +16,13 @@ Develop machine learning models for supervised classification of a real dataset 
 ### Project Requirements
 - Study and analyze preprocessing techniques.
 - Use at least four machine learning techniques, including one deep network in Keras.
-- For "Visión Artificial I", apply feature extraction including CNNs with transfer learning or fine-tuning.
+- For "Artificial Vision I", apply feature extraction including CNNs with transfer learning or fine-tuning.
 - Perform cross-validation and report using accuracy, sensitivity, specificity, precision, F1-score, and AUC.
+- Add boxplots that include the results of the different cross-validation runs.
 
 ### Comparative Performance Study
-- Conduct a study based on model hyperparameters.
+- Carry out an analysis of the performance obtained by each of the models.
+- Conduct a study based on model hyperparameters (if it is neural networks, change the number of neurons and layers).
 - Design Python code to run all experiments in a single run, saving results to a spreadsheet.
 
 ### Statistical Analysis
@@ -38,4 +40,4 @@ Develop machine learning models for supervised classification of a real dataset 
 - Projects can be individual or in pairs.
 - Counts for 50% of the final grade.
 - Presentations scheduled outside class hours.
-- Deadline: March 17, 2024, at 23:59h.
+- Deadline: March 24, 2024, at 23:59h.
