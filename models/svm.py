@@ -28,7 +28,7 @@ def get_auc(model, val_data, val_labels):
 
 def build_model(dataframe):
     # Divide dataframe into features and labels
-    data = np.array(dataframe['features'].tolist())
+    data = np.array(dataframe['features'])
     labels = np.array(dataframe['label'])
 
     cv_metrics = []
@@ -66,7 +66,7 @@ def build_model(dataframe):
 
 def evaluate_model(model, test_data):
     # Divide dataframe into features and labels
-    test_features = np.array(test_data['features'].tolist())
+    test_features = np.array(test_data['features'])
     test_labels = np.array(test_data['label'])
 
     test_metrics = []
