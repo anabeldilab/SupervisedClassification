@@ -4,17 +4,19 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-def visualize_data_distribution(df, title='Distribution of Categories'):
-    count = df['label'].value_counts()
+def visualize_labels_distribution(labels, title='Distribution of Categories'):
+    unique, counts = np.unique(labels, return_counts=True)
+    label_counts = dict(zip(unique, counts))
     fig, axs = plt.subplots(1, 2, figsize=(12, 6), facecolor='white')
     palette = sns.color_palette("viridis")
     sns.set_palette(palette)
-    axs[0].pie(count, labels=count.index, autopct='%1.1f%%', startangle=140)
+    axs[0].pie(counts, labels=unique, autopct='%1.1f%%', startangle=140)
     axs[0].set_title(title)
-    sns.barplot(x=count.index, y=count.values, ax=axs[1], palette="viridis")
+    sns.barplot(x=list(unique), y=list(counts), ax=axs[1], palette="viridis")
     axs[1].set_title('Count of Categories')
     plt.tight_layout()
     plt.show()
+
 
 def visualize_sample_images(path, num_images=5):
     image_filenames = os.listdir(path)
