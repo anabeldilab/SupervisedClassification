@@ -3,6 +3,8 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+import tensorflow as tf
+from sklearn.metrics import roc_curve, precision_recall_curve
 
 def visualize_labels_distribution(labels, title='Distribution of Categories'):
     unique, counts = np.unique(labels, return_counts=True)
@@ -79,3 +81,60 @@ def plot_images_with_predictions(model, dataset, class_labels, num_images=40, nu
 
     plt.tight_layout()
     plt.show()
+
+
+def plot_confusion_matrix(y_true, y_pred, class_labels):
+    confusion_matrix = tf.math.confusion_matrix(labels=y_true, predictions=y_pred).numpy()
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(confusion_matrix, annot=True, fmt='d', cmap='viridis', xticklabels=class_labels, yticklabels=class_labels)
+
+
+def plot_roc_curve(y_true, y_pred):
+    fpr, tpr, thresholds = roc_curve(y_true, y_pred)
+    plt.figure(figsize=(10, 7))
+    plt.plot(fpr, tpr, color='blue', label='ROC Curve')
+    plt.plot([0, 1], [0, 1], color='red', linestyle='--', label='Random Guessing')
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Receiver Operating Characteristic (ROC) Curve')
+    plt.legend()
+    plt.show()
+
+
+
+""" def validation_curve(param_range, train_scores, val_scores, title, x_label, y_label):
+    ''' Plot validation curve
+    param_range: list of parameter values
+    train_scores: list of training scores
+    val_scores: list of validation scores
+    title: title of the plot
+    x_label: label of the x-axis
+    y_label: label of the y-axis    
+    
+    '''
+    train_scores_mean = np.mean(train_scores, axis=1)
+    train_scores_std = np.std(train_scores, axis=1)
+    val_scores_mean = np.mean(val_scores, axis=1)
+    val_scores_std = np.std(val_scores, axis=1)
+
+    plt.figure(figsize=(10, 7))
+    plt.title(title)
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.ylim(0.0, 1.1)
+    lw = 2
+
+    plt.semilogx(param_range, train_scores_mean, label='Training score', color='darkorange', lw=lw)
+    plt.fill_between(param_range, train_scores_mean - train_scores_std, train_scores_mean + train_scores_std, alpha=0.2, color='darkorange')
+
+    plt.semilogx(param_range, val_scores_mean, label='Cross-validation score', color='navy', lw=lw)
+    plt.fill_between(param_range, val_scores_mean - val_scores_std, val_scores_mean + val_scores_std, alpha=0.2, color='navy')
+
+    plt.legend(loc='best')
+    plt.show() """
+
+
+def cv_boxplot(models, scores): # models = ['Modelo 1', 'Modelo 2', 'Modelo 3', 'Modelo 4', 'Modelo 5'] scores = [score1, score2, score3, score4, score5]
+    fig7, ax = plt.subplots()
+    ax.set_title('Modelos')
+    ax.boxplot(scores,labels=models)

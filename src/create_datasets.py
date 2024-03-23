@@ -4,7 +4,7 @@ import tensorflow as tf
 from src.visualize_data import visualize_labels_distribution
 
 
-def load_data(directory):
+def load_image_path(directory):
     filepath = []
     label = []
 
@@ -84,8 +84,8 @@ def extract_labels(dataset):
 
 def create(path, train_dir, test_dir):
     # Load the training and testing data
-    train_data = load_data(train_dir)
-    test_data = load_data(test_dir)
+    train_data = load_image_path(train_dir)
+    test_data = load_image_path(test_dir)
 
     # Shape
     print(f"The shape of The Train data is: {train_data.shape}")

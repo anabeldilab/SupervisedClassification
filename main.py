@@ -1,4 +1,4 @@
-from src.create_datasets import create, load_data
+from src.create_datasets import create, load_image_path
 from models.xception_94 import xception_94
 from models.vgg16 import vgg_16
 from models.resnet_50 import resnet_50
@@ -16,8 +16,8 @@ train_dir = 'data/train'
 test_dir = 'data/test'
 
 # Load the dataset
-train_data = load_data(train_dir)
-test_data = load_data(test_dir)
+train_data = load_image_path(train_dir)
+test_data = load_image_path(test_dir)
 
 # Feature extraction
 HOG_train_features = HOG(train_data['filepath'])
