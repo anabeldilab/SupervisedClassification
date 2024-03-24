@@ -2,7 +2,6 @@ import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score, roc_auc_score, accuracy_score
-from src.visualize_data import simulate_learning_curve
 import matplotlib.pyplot as plt
 
 def load_and_preprocess_image(path, label):
