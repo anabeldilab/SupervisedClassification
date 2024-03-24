@@ -2,3 +2,4 @@ scikit-image
 numpy
 keras
 tensorflow<2.11
+matplotlib

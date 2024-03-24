@@ -48,7 +48,7 @@ def hypothesis_testing(scores_models, cv=5, alpha=0.01):
         results.append([model_names[i], np.mean(scores_data[i]), np.std(scores_data[i])])
     results = np.array(results)
 
-    np.savetxt('results/model_results/hypothesis_testing.csv', results, mode='a', delimiter=',', fmt='%s')
+    np.savetxt('results/model_results/hypothesis_testing.csv', results, delimiter=',', fmt='%s')
 
 
 

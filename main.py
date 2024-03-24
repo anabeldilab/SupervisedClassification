@@ -28,9 +28,9 @@ print(f"The shape of The Train data is: {train_data.shape}")
 print(f"The shape of The Test data is: {test_data.shape}")
 
 # Feature extraction
-HOG_train_data_svm = HOG(train_data, orientations=9, pixels_per_cell=(16, 16))
+""" HOG_train_data_svm = HOG(train_data, orientations=9, pixels_per_cell=(16, 16))
 
-LBP_train_data_svm = LBP(train_data, radius=5, points=8)
+LBP_train_data_svm = LBP(train_data, radius=5, points=8) 
 
 HOG_train_data_knn = HOG(train_data, orientations=9, pixels_per_cell=(6, 6))
 
@@ -39,7 +39,7 @@ LBP_train_data_knn = LBP(train_data, radius=5, points=9)
 HOG_train_data_rf = HOG(train_data, orientations=5, pixels_per_cell=(13, 13))
 
 LBP_train_data_rf = LBP(train_data, radius=5, points=18)
-"""
+ 
 ##########  HOG + ANN  ##########
 # Build and test the model
 print("############### HOG + ANN ###############")
@@ -64,10 +64,12 @@ plot_training_history(vgg_16_history, 'VGG16')
 resnet_50_history, val_results, test_metrics = resnet_50(train_ds, validation_ds, test_ds)
 save_model_results(val_results, test_metrics, columns=columns, file_path='results/model_results/results_cnn.csv', include_header=False)
 plot_training_history(resnet_50_history, 'ResNet50') 
+
+
 """
  ##########  CNN cross validation ##########
 
-##########  HOG + ANN  ##########
+""" ##########  HOG + ANN  ##########
 print("############### HOG + ANN ###############")
 estimator, ann_histories, hog_ann_cv_metrics = ann_classifier_cv(HOG_train_data_svm, epochs=20, folds=5)
 save_cv_results(hog_ann_cv_metrics, file_path='results/model_results/results_cv.csv', include_header=True)
@@ -75,32 +77,35 @@ for history in ann_histories:
     plot_training_history(history, 'HOG+ANN-CV')
 save_mean_metrics(hog_ann_cv_metrics, include_header=True)
 #plot_learning_curve(estimator, 'HOG+ANN', HOG_train_data_svm, cv=5, n_jobs=-1, scoring='f1')
-
+"""
 
 ##########  Xception  ##########
-xception_94_histories, xception_cv_metrics = xception_94_cv(train_data, epochs=20, folds=5)
+""" xception_94_histories, xception_cv_metrics = xception_94_cv(train_data, epochs=10, folds=2)
+print(xception_cv_metrics)
 save_cv_results(xception_cv_metrics, file_path='results/model_results/results_cv.csv', include_header=False)
 for history in xception_94_histories:
     plot_training_history(history, 'Xception-CV')
-save_mean_metrics(xception_cv_metrics, include_header=False)
+save_mean_metrics(xception_cv_metrics, include_header=False) """
 
 
 ##########  VGG16  ##########
-vgg_16_histories, vgg_cv_metrics = vgg_16_cv(train_data, epochs=20, folds=5)
+""" vgg_16_histories, vgg_cv_metrics = vgg_16_cv(train_data, epochs=10, folds=2)
+print(vgg_cv_metrics)
 save_cv_results(vgg_cv_metrics, file_path='results/model_results/results_cv.csv', include_header=False)
 for history in vgg_16_histories:
     plot_training_history(history, 'VGG16-CV')
-save_mean_metrics(vgg_cv_metrics, include_header=False)
+save_mean_metrics(vgg_cv_metrics, include_header=False) """
 
 
-##########  ResNet50  ##########
+""" ##########  ResNet50  ##########
 resnet_50_histories, resnet_cv_metrics = resnet_50_cv(train_data, epochs=20, folds=5)
+print(resnet_cv_metrics)
 save_cv_results(resnet_cv_metrics, file_path='results/model_results/results_cv.csv', include_header=False)
 for history in resnet_50_histories:
     plot_training_history(history, 'ResNet50-CV')
-save_mean_metrics(resnet_cv_metrics, include_header=False)
+save_mean_metrics(resnet_cv_metrics, include_header=False) """
 
-
+"""
 ##########  HOG + SVM  ##########
 # Build and test the model
 print("############### HOG + SVM ###############")
@@ -181,4 +186,35 @@ scores_models = [
     ('LBP+RF', lbp_rf_cv_metrics['F1-Score'])
 ]
 
+hypothesis_testing(scores_models, cv=5)  
+
+"""
+# Cargar tu DataFrame
+df = pd.read_csv('results/model_results/results_cv.csv')
+
+# Inicializa una lista vacía para almacenar los scores
+scores = []
+
+# Lista de modelos de interés
+models = ['ANN - Validation', 'Xception - Validation']
+
+# Extraer los F1-Scores para cada modelo y agregarlos a la lista `scores`
+for modelo in models:
+    f1_scores_modelo = df[df['Model'].str.contains(modelo)]['F1-Score'].tolist()
+    scores.append(f1_scores_modelo)
+
+# Ahora puedes pasar `models` y `scores` a tu función `cv_boxplot`
+cv_boxplot(models, scores)
+
+# Inicializa una lista vacía para almacenar las tuplas (modelo, F1-Scores)
+scores_models = []
+
+# Extraer los F1-Scores para cada modelo y agregarlos a la lista `scores_models`
+for modelo in models:
+    f1_scores_modelo = df[df['Model'].str.contains(modelo)]['F1-Score'].tolist()
+    scores_models.append((modelo, f1_scores_modelo))
+
+# Ahora puedes pasar `scores_models` a tu función `hypothesis_testing`
 hypothesis_testing(scores_models, cv=5) 
+
+

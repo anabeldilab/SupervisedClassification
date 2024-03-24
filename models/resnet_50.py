@@ -82,17 +82,13 @@ def train_and_evaluate_model(model, train_ds, validation_ds, epochs=20):
 ############################################################################################################
 
 def resnet_50(train_ds, validation_ds, test_ds):
-    # Build the model
     model = build_model(input_shape=(256, 256, 3))
     model.summary()
 
-    # Train and evaluate the model
     history, val_metrics = train_and_evaluate_model(model, train_ds, validation_ds, epochs=20)
 
-    # Evaluate the model on the test dataset
     test_loss, test_accuracy, test_auc, test_precision, test_recall, test_f1, tn, fp = model.evaluate(test_ds)
 
-    # Calculate specificity
     specificity = tn / (tn + fp)
 
     test_metrics = {

@@ -27,7 +27,6 @@ def get_auc(model, val_data, val_labels):
     return auc
 
 def build_model(dataframe, C=1, gamma='scale'):
-    # Divide dataframe into features and labels
     data = np.array(dataframe['features'])
     labels = np.array(dataframe['label'])
 
