@@ -2,11 +2,11 @@
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 import numpy as np
-from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score, roc_auc_score
+from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score, roc_auc_score, accuracy_score
 from sklearn.model_selection import StratifiedKFold
 
 def get_metrics(val_labels, predicted_labels):
-    accuracy = metrics.accuracy_score(val_labels, predicted_labels)
+    accuracy = accuracy_score(val_labels, predicted_labels)
     cm = confusion_matrix(val_labels, predicted_labels)
     
     # Asumiendo 'PNEUMONIA' como la etiqueta positiva
@@ -27,7 +27,7 @@ def get_auc(model, val_data, val_labels):
 
     return auc
 
-def build_model(dataframe, n_estimators=100):
+def build_model(dataframe, n_estimators=100, max_depth=None):
     # Divide dataframe into features and labels
     data = np.array(dataframe['features'])
     labels = np.array(dataframe['label'])
@@ -41,8 +41,8 @@ def build_model(dataframe, n_estimators=100):
         training_labels, val_labels = labels[train_index], labels[val_index]
 
         # Crear y entrenar el modelo SVM
-        model = RandomForestClassifier(n_estimators = n_estimators)
-        model.fit(training_data, training_labels)
+        model = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth)
+        estimator = model.fit(training_data, training_labels)
 
         # Evaluar el modelo
         predicted_labels = model.predict(val_data)
@@ -50,6 +50,7 @@ def build_model(dataframe, n_estimators=100):
         auc = get_auc(model, val_data, val_labels)
 
         metrics = {
+            'Model': 'Random Forest - Validation',
             'Fold': fold + 1,
             'Exactitud': accuracy,
             'Sensibilidad': sensibility,
@@ -62,43 +63,11 @@ def build_model(dataframe, n_estimators=100):
         print(f"Fold {fold + 1} - Accuracy: {accuracy}, Sensibility: {sensibility}, Specificity: {specificity}, Precision: {precision}, F1-Score: {f1}, AUC: {auc}")
         cv_metrics.append(metrics)
 
-    return model, cv_metrics
+    return estimator, cross_validation, cv_metrics
 
 
-def evaluate_model(model, test_data):
-    # Divide dataframe into features and labels
-    test_features = np.array(test_data['features'])
-    test_labels = np.array(test_data['label'])
-
-    test_metrics = []
-
-    # Predecir etiquetas para el conjunto de prueba
-    predicted_labels = model.predict(test_features)
-
-    # Calcular y mostrar métricas de rendimiento para el conjunto de prueba
-    accuracy, sensibility, specificity, precision, f1 = get_metrics(test_labels, predicted_labels)
-    auc = get_auc(model, test_features, test_labels)
-
-    metrics = {
-        'Fold': 'Test',
-        'Exactitud': accuracy,
-        'Sensibilidad': sensibility,
-        'Especificidad': specificity,
-        'Precisión': precision,
-        'F1-Score': f1,
-        'AUC': auc
-    }
-
-    print(f"Test - Accuracy: {accuracy}, Sensibility: {sensibility}, Specificity: {specificity}, Precision: {precision}, F1-Score: {f1}, AUC: {auc}")
-    test_metrics.append(metrics)
-
-    return test_metrics
-
-def random_forest_classifier(train_data, test_data):
+def random_forest_classifier(train_data, n_estimators=100, max_depth=None):
     # Construir el modelo SVM
-    model, cv_metrics = build_model(train_data)
+    estimator, cross_validation, cv_metrics = build_model(train_data, n_estimators, max_depth)
 
-    # Evaluar el modelo en el conjunto de prueba
-    test_metrics = evaluate_model(model, test_data)
-
-    return cv_metrics, test_metrics
+    return estimator, cross_validation, cv_metrics

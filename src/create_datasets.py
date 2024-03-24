@@ -82,17 +82,9 @@ def extract_labels(dataset):
     return labels
 
 
-def create(path, train_dir, test_dir):
-    # Load the training and testing data
-    train_data = load_image_path(train_dir)
-    test_data = load_image_path(test_dir)
-
-    # Shape
-    print(f"The shape of The Train data is: {train_data.shape}")
-    print(f"The shape of The Test data is: {test_data.shape}")
-
+def create_datasets(path, image_size=(256, 256), batch_size=32):
     # Create datasets
-    train_ds, validation_ds, test_ds = create_datasets_with_augmentation(path, image_size=(256, 256), batch_size=16)
+    train_ds, validation_ds, test_ds = create_datasets_with_augmentation(path, image_size = image_size, batch_size = batch_size)
 
     # Shape of the dataset
     for image_batch, labels_batch in train_ds:
@@ -100,7 +92,16 @@ def create(path, train_dir, test_dir):
         print("Shape of y_train: ", labels_batch.shape)
         break
 
-    # Visualize the distribution of the labels
-    visualize_labels_distribution(extract_labels(train_ds), title='Distribution of Categories (train)')
-
     return train_ds, validation_ds, test_ds
+
+
+def transform_metrics(cv_metrics):
+    transformed_metrics = {}
+    # Inicializar listas para cada métrica
+    for key in cv_metrics[0].keys():
+        transformed_metrics[key] = []
+    # Agrupar los valores de cada métrica en listas
+    for metric in cv_metrics:
+        for key, value in metric.items():
+            transformed_metrics[key].append(value)
+    return transformed_metrics

@@ -2,7 +2,9 @@ from skimage.feature import hog
 import cv2
 
 
-def HOG(image_path_array, size=(128, 128), orientations=8, pixels_per_cell=(8, 8), cells_per_block=(1, 1)):
+def HOG(data, size=(128, 128), orientations=8, pixels_per_cell=(8, 8), cells_per_block=(1, 1)):
+    image_path_array = data['filepath']
+    labels = data['label']
     feature_data = []
     for image_path in image_path_array:
         image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
@@ -13,9 +15,14 @@ def HOG(image_path_array, size=(128, 128), orientations=8, pixels_per_cell=(8, 8
         image = cv2.resize(image, size)
         fd = hog(image, orientations=orientations, pixels_per_cell=pixels_per_cell,
                 cells_per_block=cells_per_block, visualize=False)
-        print("image_path: ", image_path)
+        print("HOG feature extraction image_path: ", image_path)
         feature_data.append(fd)
 
-    return feature_data
+    HOG_data = {
+        'features': feature_data,
+        'label': labels
+    }
+
+    return HOG_data
 
 
